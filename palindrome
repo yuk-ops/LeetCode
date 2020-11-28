@@ -1,0 +1,65 @@
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+        
+        if (head.next.next == null) {
+            return head.val == head.next.val;
+        }
+        
+        ListNode slow = head, fast = head;
+        
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        if (fast != null) {
+            slow = slow.next;
+        }
+
+        ListNode left = head;
+        ListNode right = reverse(slow);
+        ListNode leftTail = find(head, slow);
+        ListNode rightHead = right;
+        
+        while (right != null) {
+            if (left.val != right.val) {
+                leftTail.next = reverse(rightHead);
+                return false;
+            }
+            
+            left = left.next;
+            right = right.next;
+        }
+        
+        leftTail.next = reverse(rightHead);
+        return true;
+    }
+    
+    private ListNode reverse(ListNode node) {
+        ListNode prev = node, cur = node.next, temp;
+        
+        while (cur != null) {
+            temp = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = temp;
+        }
+        
+        node.next = null;
+        
+        return prev;
+    }
+    
+    private ListNode find(ListNode head, ListNode target) {
+        ListNode node = head;
+        
+        while (node.next != target) {
+            node = node.next;
+        }
+        
+        return node;
+    }
+}
